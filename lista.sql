@@ -182,3 +182,18 @@ BEGIN
 END //
 DELIMITER ;
 CALL sp_ListarAutores();
+
+--exercicio 2
+DELIMITER //
+CREATE PROCEDURE sp_LivrosPorCategoria(IN CategoriaNome VARCHAR(100))
+BEGIN
+    SELECT Livro.Titulo, Autor.Nome, Autor.Sobrenome
+    FROM Livro
+    JOIN Categoria ON Livro.Categoria_ID = Categoria.Categoria_ID
+    JOIN Autor_Livro ON Livro.Livro_ID = Autor_Livro.Livro_ID
+    JOIN Autor ON Autor_Livro.Autor_ID = Autor.Autor_ID
+    WHERE Categoria.Nome = CategoriaNome;
+END //
+DELIMITER ;
+CALL sp_LivrosPorCategoria('Romance');
+CALL sp_LivrosPorCategoria('Ciência');
