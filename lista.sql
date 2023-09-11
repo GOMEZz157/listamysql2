@@ -276,4 +276,25 @@ BEGIN
 END //
 DELIMITER ;
 
+--exercicio 7
+DELIMITER //
+CREATE PROCEDURE sp_AdicionarLivro(
+    IN Titulo VARCHAR(255),
+    IN Editora_ID INT,
+    IN Ano_Publicacao INT,
+    IN Numero_Paginas INT,
+    IN Categoria_ID INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR 1062
+    BEGIN
+        -- Código de erro 1062 é para chave duplicada (título já existe)
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Erro: O título do livro já existe na tabela.';
+    END;
+
+    INSERT INTO Livro (Titulo, Editora_ID, Ano_Publicacao, Numero_Paginas, Categoria_ID)
+    VALUES (Titulo, Editora_ID, Ano_Publicacao, Numero_Paginas, Categoria_ID);
+END //
+DELIMITER ;
 
