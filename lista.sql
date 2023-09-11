@@ -240,4 +240,40 @@ END //
 DELIMITER ;
 CALL sp_LivrosAteAno(2010);
 
+--exercicio 6
+DELIMITER //
+CREATE PROCEDURE sp_TitulosPorCategoria(IN CategoriaNome VARCHAR(100))
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE livroTitulo VARCHAR(255);
+    DECLARE cur CURSOR FOR
+        SELECT Livro.Titulo
+        FROM Livro
+        JOIN Categoria ON Livro.Categoria_ID = Categoria.Categoria_ID
+        WHERE Categoria.Nome = CategoriaNome;
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    
+    OPEN cur;
+    
+    -- Inicialize a tabela de resultados vazia
+    CREATE TEMPORARY TABLE IF NOT EXISTS Temp_Titulos (Titulo VARCHAR(255));
+    
+    FETCH cur INTO livroTitulo;
+    
+    WHILE NOT done DO
+        INSERT INTO Temp_Titulos (Titulo) VALUES (livroTitulo);
+        FETCH cur INTO livroTitulo;
+    END WHILE;
+    
+    CLOSE cur;
+    
+    -- Selecionar os resultados da tabela temporária
+    SELECT Titulo FROM Temp_Titulos;
+    
+    -- Limpar a tabela temporária
+    DROP TEMPORARY TABLE IF EXISTS Temp_Titulos;
+END //
+DELIMITER ;
+
 
