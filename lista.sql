@@ -197,3 +197,14 @@ END //
 DELIMITER ;
 CALL sp_LivrosPorCategoria('Romance');
 CALL sp_LivrosPorCategoria('Ciência');
+
+--exercicio 3
+DELIMITER //
+CREATE PROCEDURE sp_ContarLivrosPorCategoria(IN CategoriaNome VARCHAR(100), OUT TotalLivros INT)
+BEGIN
+    SELECT COUNT(*) INTO TotalLivros
+    FROM Livro
+    JOIN Categoria ON Livro.Categoria_ID = Categoria.Categoria_ID
+    WHERE Categoria.Nome = CategoriaNome;
+END //
+DELIMITER ;
