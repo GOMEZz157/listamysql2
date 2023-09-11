@@ -229,3 +229,15 @@ END //
 DELIMITER ;
 
 
+--exercicio 5
+DELIMITER //
+CREATE PROCEDURE sp_LivrosAteAno(IN AnoFornecido INT)
+BEGIN
+    SELECT Titulo, Ano_Publicacao
+    FROM Livro
+    WHERE Ano_Publicacao <= AnoFornecido;
+END //
+DELIMITER ;
+CALL sp_LivrosAteAno(2010);
+
+
