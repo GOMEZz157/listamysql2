@@ -214,3 +214,18 @@ CALL sp_ContarLivrosPorCategoria('Romance', @Total);
 -- Recupere o valor de @Total (número total de livros)
 SELECT @Total;
 
+
+--exercicio 4
+DELIMITER //
+CREATE PROCEDURE sp_VerificarLivrosCategoria(IN CategoriaNome VARCHAR(100), OUT PossuiLivros BOOL)
+BEGIN
+    SELECT EXISTS (
+        SELECT 1
+        FROM Livro
+        JOIN Categoria ON Livro.Categoria_ID = Categoria.Categoria_ID
+        WHERE Categoria.Nome = CategoriaNome
+    ) INTO PossuiLivros;
+END //
+DELIMITER ;
+
+
