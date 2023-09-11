@@ -311,3 +311,50 @@ BEGIN
 END //
 DELIMITER ;
 
+--exercicio 9
+DELIMITER //
+CREATE PROCEDURE sp_TitulosPorCategoria(IN CategoriaNome VARCHAR(100))
+BEGIN
+    -- Declaração de variáveis
+    DECLARE done INT DEFAULT 0;          -- Variável para controlar o loop
+    DECLARE livroTitulo VARCHAR(255);    -- Variável para armazenar o título do livro
+    
+    -- Declaração do cursor
+    DECLARE cur CURSOR FOR
+        SELECT Livro.Titulo
+        FROM Livro
+        JOIN Categoria ON Livro.Categoria_ID = Categoria.Categoria_ID
+        WHERE Categoria.Nome = CategoriaNome;
+    
+    -- Manipulador para lidar com a condição de não encontrar mais registros
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    
+    -- Abre o cursor
+    OPEN cur;
+    
+    -- Inicializa uma tabela temporária para armazenar os resultados
+    CREATE TEMPORARY TABLE IF NOT EXISTS Temp_Titulos (Titulo VARCHAR(255));
+    
+    -- Busca o primeiro título do cursor
+    FETCH cur INTO livroTitulo;
+    
+    -- Loop para processar os resultados do cursor
+    WHILE NOT done DO
+        -- Insere o título na tabela temporária
+        INSERT INTO Temp_Titulos (Titulo) VALUES (livroTitulo);
+        -- Busca o próximo título
+        FETCH cur INTO livroTitulo;
+    END WHILE;
+    
+    -- Fecha o cursor
+    CLOSE cur;
+    
+    -- Seleciona os resultados da tabela temporária
+    SELECT Titulo FROM Temp_Titulos;
+    
+    -- Remove a tabela temporária
+    DROP TEMPORARY TABLE IF EXISTS Temp_Titulos;
+END //
+DELIMITER ;
+
+
