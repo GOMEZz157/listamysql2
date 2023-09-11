@@ -208,3 +208,9 @@ BEGIN
     WHERE Categoria.Nome = CategoriaNome;
 END //
 DELIMITER ;
+-- Chame a stored procedure para contar livros em uma categoria específica (por exemplo, "Romance")
+CALL sp_ContarLivrosPorCategoria('Romance', @Total);
+
+-- Recupere o valor de @Total (número total de livros)
+SELECT @Total;
+
